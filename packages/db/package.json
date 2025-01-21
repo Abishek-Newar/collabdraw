@@ -1,0 +1,19 @@
+{
+  "name": "@repo/db",
+  "version": "1.0.0",
+  "main": "index.js",
+  "exports": {
+    "./client": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*"
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^6.2.1",
+    "prisma": "^6.2.1"
+  }
+}
