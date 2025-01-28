@@ -3,10 +3,13 @@ import bcrypt from "bcryptjs"
 import { signinValidator, signupValidator } from "./lib/validators.js";
 import {prisma} from "@repo/db/client";
 import generateToken from "./lib/jwt.config.js";
+import authMiddleware from "./middlewares/authMiddleware.js";
 
 
 const app = express()
 app.use(express.json())
+
+
 app.post("/signup",async(req: Request,res:Response)=>{
     const body = req.body;
     var salt = bcrypt.genSaltSync(10);
@@ -43,7 +46,7 @@ app.post("/signup",async(req: Request,res:Response)=>{
             }
         }) 
 
-        const token= generateToken(users)
+        const token= await generateToken(users)
 
         res.json({
             token: token,
@@ -77,12 +80,10 @@ app.post("/signin",async(req: Request,res: Response)=>{
         
         const user = await prisma.user.findFirst({
             where:{
-                OR:[
-                    {email: body.login},
-                    {username: body.login}
-                ]
+                email: body.email
             }
         })
+        console.log(user)
         if(user === null || !user){
              res.status(401).json({
                 msg: "user not found"
@@ -99,8 +100,8 @@ app.post("/signin",async(req: Request,res: Response)=>{
             return;
         }
 
-        const token = generateToken(user)
-
+        const token = await  generateToken(user)
+        console.log(token)
         res.json({
             token: token,
             user: {
@@ -119,8 +120,26 @@ app.post("/signin",async(req: Request,res: Response)=>{
 })
 
 
-app.post("createRoom",async(req,res)=>{
-    
+app.post("/createRoom",authMiddleware,async(req:Request,res:Response)=>{
+    const body = req.body
+    const userId = req.userId
+
+    try {
+        const room = await prisma.room.create({
+            data:{
+                slug: body.name,
+                adminId: userId || "",
+            }
+        })
+
+        res.json({
+            roomid: room.id
+        })
+    } catch (error) {
+        res.status(401).json({
+            msg: "room already exist with this name"
+        })
+    }
 })
 
 app.listen(3002,()=>{

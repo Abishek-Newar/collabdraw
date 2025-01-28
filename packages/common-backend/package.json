@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "exports": {
-    "./config": "./src/index.ts"
+    "./config": "./src/index.js"
   },
   "devDependencies": {
     "@repo/typescript-config": "*"

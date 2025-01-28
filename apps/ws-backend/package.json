@@ -9,9 +9,10 @@
     "build": "tsc -b"
   },
   "dependencies": {
+    "@repo/db": "*",
     "@repo/typescript-config": "*",
     "@types/ws": "^8.5.13",
-    "@repo/db": "*",
+    "jose": "^5.9.6",
     "ws": "^8.18.0"
   },
   "license": "MIT"

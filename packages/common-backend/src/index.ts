@@ -6,8 +6,6 @@ export const env ={
 }
 
 
-
-
 const generateToken = async(payload:any) =>{
     const jwk = await  importJWK({k:process.env.JWT_SECRET,alg: "HS256",kty: "oct"})
 
