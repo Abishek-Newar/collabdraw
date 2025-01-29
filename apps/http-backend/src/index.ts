@@ -142,6 +142,28 @@ app.post("/createRoom",authMiddleware,async(req:Request,res:Response)=>{
     }
 })
 
+app.get("/chats/:roomId",async (req,res)=>{
+    const roomId:number = Number(req.params.roomId)
+    console.log(roomId)
+    try {
+        const messages = await prisma.chat.findMany({
+            where:{
+                roomId: roomId
+            },
+            orderBy:{
+                id: "desc"
+            },
+            take: 50
+        })
+        res.json(messages)
+    } catch (error) {
+        console.log(error)
+        res.status(403).json({
+            msg: "error while getting chats"
+        })
+    }
+})
+
 app.listen(3002,()=>{
     console.log("server connected")
 })
